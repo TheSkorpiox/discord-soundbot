@@ -1,4 +1,4 @@
-import SoundQueue from '~/queue/SoundQueue';
+import SoundQueue from '../../queue/SoundQueue';
 
 import Command from './Command';
 

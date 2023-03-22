@@ -1,8 +1,8 @@
 import { Message } from 'discord.js';
 
-import * as sounds from '~/util/db/Sounds';
-import localize from '~/util/i18n/localize';
-import { getSounds } from '~/util/SoundUtil';
+import * as sounds from '../../util/db/Sounds';
+import localize from '../../util/i18n/localize';
+import { getSounds } from '../../util/SoundUtil';
 
 import Command from '../base/Command';
 
@@ -19,7 +19,7 @@ export class SearchCommand extends Command {
 
     const tag = params.shift()!;
     const results = getSounds().filter(sound => sound.includes(tag));
-    sounds.withTag(tag).forEach(sound => results.push(sound));
+    sounds.withTag(tag).forEach((sound: any) => results.push(sound));
 
     if (!results.length) {
       message.author.send(localize.t('commands.search.notFound'));

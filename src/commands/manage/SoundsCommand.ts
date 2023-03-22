@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
 
-import localize from '~/util/i18n/localize';
-import { getSounds } from '~/util/SoundUtil';
+import localize from '../../util/i18n/localize';
+import { getSounds } from '../../util/SoundUtil';
 
 import ConfigCommand from '../base/ConfigCommand';
 import chunkedMessages from '../util/chunkedMessages';

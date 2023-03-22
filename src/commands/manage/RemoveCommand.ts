@@ -1,9 +1,9 @@
 import { Message } from 'discord.js';
 import fs from 'fs';
 
-import * as sounds from '~/util/db/Sounds';
-import localize from '~/util/i18n/localize';
-import { existsSound, getPathForSound } from '~/util/SoundUtil';
+import * as sounds from '../../util/db/Sounds';
+import localize from '../../util/i18n/localize';
+import { existsSound, getPathForSound } from '../../util/SoundUtil';
 
 import Command from '../base/Command';
 

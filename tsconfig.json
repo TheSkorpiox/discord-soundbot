@@ -22,7 +22,7 @@
   "include": [
     "src/**/*",
     "bin/**/*"
-  ],
+, "src/.d.ts"  ],
 
   "exclude": [
     "**/__test__",

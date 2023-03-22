@@ -1,8 +1,9 @@
 import { Message } from 'discord.js';
+import { VoiceChannel } from 'discord.js';
 
-import QueueItem from '~/queue/QueueItem';
-import localize from '~/util/i18n/localize';
-import { existsSound } from '~/util/SoundUtil';
+import QueueItem from '../../queue/QueueItem';
+import localize from '../../util/i18n/localize';
+import { existsSound } from '../../util/SoundUtil';
 
 import QueueCommand from '../base/QueueCommand';
 
@@ -29,7 +30,7 @@ export class LoopCommand extends QueueCommand {
     }
 
     const count = parseInt(countAsString) || Number.MAX_SAFE_INTEGER;
-    const item = new QueueItem(sound, voiceChannel, message, count);
+    const item = new QueueItem(sound, <VoiceChannel>voiceChannel, message, count);
 
     this.queue.add(item);
   }

@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
 
-import Sound from '~/util/db/models/Sound';
-import * as soundsDb from '~/util/db/Sounds';
+import Sound from '../../util/db/models/Sound';
+import * as soundsDb from '../../util/db/Sounds';
 
 import Command from '../base/Command';
 
@@ -19,8 +19,8 @@ export class MostPlayedCommand extends Command {
     const sounds = soundsDb.mostPlayed();
     if (!sounds.length) return undefined;
 
-    const longestSound = this.findLongestWord(sounds.map(sound => sound.name));
-    const longestCount = this.findLongestWord(sounds.map(sound => String(sound.count)));
+    const longestSound = this.findLongestWord(sounds.map((sound: any) => sound.name));
+    const longestCount = this.findLongestWord(sounds.map((sound: any) => String(sound.count)));
     return this.formatSounds(sounds, longestSound.length, longestCount.length);
   }
 

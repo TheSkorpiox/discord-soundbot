@@ -1,6 +1,6 @@
-import { Collection, Message, MessageEmbed } from 'discord.js';
+import { Collection, Message, EmbedBuilder } from 'discord.js';
 
-import localize from '~/util/i18n/localize';
+import localize from '../../util/i18n/localize';
 
 import ConfigCommand from '../base/ConfigCommand';
 
@@ -25,7 +25,7 @@ export class LanguageCommand extends ConfigCommand {
       this.getLanguageMap().findKey((value, key) => [key, value].includes(chosenLanguage));
 
     if (!language) {
-      message.channel.send(this.help());
+      message.channel.send({ embeds: [this.help()] });
       return;
     }
 
@@ -38,7 +38,7 @@ export class LanguageCommand extends ConfigCommand {
   }
 
   private help() {
-    return new MessageEmbed()
+    return new EmbedBuilder()
       .setColor('#0099ff')
       .setTitle(localize.t('commands.lang.title'))
       .setDescription(

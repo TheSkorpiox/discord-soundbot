@@ -3,10 +3,10 @@ import ffmpeg from 'fluent-ffmpeg';
 import fs from 'fs';
 import util from 'util';
 
-import { FormatError } from '~/util/Errors';
-import getSecondsFromTime from '~/util/getSecondsFromTime';
-import localize from '~/util/i18n/localize';
-import { existsSound, getExtensionForSound } from '~/util/SoundUtil';
+import { FormatError } from '../../util/Errors';
+import getSecondsFromTime from '../../util/getSecondsFromTime';
+import localize from '../../util/i18n/localize';
+import { existsSound, getExtensionForSound } from '../../util/SoundUtil';
 
 import Command from '../base/Command';
 import ErrorParams from './modify/ErrorParams';
@@ -42,7 +42,7 @@ export class ModifyCommand extends Command {
       await this.performModification(fileInfo, modifier, commandParams);
       await this.replace(fileInfo);
       message.channel.send(localize.t('commands.modify.success', { modifier, sound }));
-    } catch (error) {
+    } catch (error: any) {
       this.handleError(message, error, { modifier, sound });
     }
   }

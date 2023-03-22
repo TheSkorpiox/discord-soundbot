@@ -1,7 +1,7 @@
-import Config from '~/config/Config';
-import ConfigInterface from '~/config/ConfigInterface';
-import Container from '~/util/Container';
-import localize from '~/util/i18n/localize';
+import Config from './config/Config';
+import ConfigInterface from './config/ConfigInterface';
+import Container from './util/Container';
+import localize from './util/i18n/localize';
 
 import SoundBot from './bot/SoundBot';
 import Command from './commands/base/Command';

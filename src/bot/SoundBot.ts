@@ -1,12 +1,13 @@
-import { Client, Guild, Message, TextChannel, VoiceState } from 'discord.js';
+import { Client, Guild, Message, TextChannel, VoiceState, PermissionsBitField, GatewayIntentBits } from 'discord.js';
+import { VoiceChannel } from 'discord.js';
 
-import Config from '~/config/Config';
-import QueueItem from '~/queue/QueueItem';
-import SoundQueue from '~/queue/SoundQueue';
-import * as entrances from '~/util/db/Entrances';
-import * as exits from '~/util/db/Exits';
-import localize from '~/util/i18n/localize';
-import { getSounds } from '~/util/SoundUtil';
+import Config from '../config/Config';
+import QueueItem from '../queue/QueueItem';
+import SoundQueue from '../queue/SoundQueue';
+import * as entrances from '../util/db/Entrances';
+import * as exits from '../util/db/Exits';
+import localize from '../util/i18n/localize';
+import { getSounds } from '../util/SoundUtil';
 
 import Command from '../commands/base/Command';
 import CommandCollection from './CommandCollection';
@@ -24,7 +25,9 @@ export default class SoundBot extends Client {
     messageHandler: MessageHandler,
     queue: SoundQueue
   ) {
-    super();
+    super({
+      intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.MessageContent]
+    });
 
     this.config = config;
     this.commands = commands;
@@ -66,9 +69,9 @@ export default class SoundBot extends Client {
     if (!entrances.exists(member.id)) return;
 
     const sound = entrances.get(member.id);
-    if (!getSounds().includes(sound)) return;
+    if (!getSounds().includes(sound!.sound)) return;
 
-    this.queue.add(new QueueItem(sound, currentVoiceChannel));
+    this.queue.add(new QueueItem(sound!.sound, <VoiceChannel>currentVoiceChannel));
   }
 
   private onUserLeavesVoiceChannel(oldState: VoiceState, newState: VoiceState) {
@@ -80,9 +83,9 @@ export default class SoundBot extends Client {
     if (!exits.exists(member.id)) return;
 
     const sound = exits.get(member.id);
-    if (!getSounds().includes(sound)) return;
+    if (!getSounds().includes(sound!.sound)) return;
 
-    this.queue.add(new QueueItem(sound, previousVoiceChannel));
+    this.queue.add(new QueueItem(sound!.sound, <VoiceChannel>previousVoiceChannel));
   }
 
   private onMessage(message: Message) {
@@ -99,14 +102,14 @@ export default class SoundBot extends Client {
   }
 
   private findFirstWritableChannel(guild: Guild) {
-    if (!guild.me) return undefined;
+    if (!guild.members.me) return undefined;
 
     const channels = guild.channels.cache
-      .filter(channel => channel.type === 'text')
+      .filter(channel => channel.isTextBased())
       .filter(channel => {
-        const permissions = channel.permissionsFor(guild.me!);
+        const permissions = channel.permissionsFor(guild.members.me!);
 
-        return Boolean(permissions && permissions.has('SEND_MESSAGES'));
+        return Boolean(permissions && permissions.has(PermissionsBitField.Flags.SendMessages));
       });
 
     if (!channels.size) return undefined;

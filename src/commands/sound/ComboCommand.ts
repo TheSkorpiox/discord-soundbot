@@ -1,8 +1,9 @@
 import { Message } from 'discord.js';
+import { VoiceChannel } from 'discord.js';
 
-import QueueItem from '~/queue/QueueItem';
-import localize from '~/util/i18n/localize';
-import { getSounds } from '~/util/SoundUtil';
+import QueueItem from '../../queue/QueueItem';
+import localize from '../../util/i18n/localize';
+import { getSounds } from '../../util/SoundUtil';
 
 import QueueCommand from '../base/QueueCommand';
 
@@ -30,7 +31,7 @@ export class ComboCommand extends QueueCommand {
     params.forEach(sound => {
       if (!sounds.includes(sound)) return;
 
-      const item = new QueueItem(sound, voiceChannel, message);
+      const item = new QueueItem(sound, <VoiceChannel>voiceChannel, message);
       this.queue.add(item);
     });
   }

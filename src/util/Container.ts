@@ -1,11 +1,11 @@
-import Config from '~/config/Config';
-import SoundQueue from '~/queue/SoundQueue';
+import Config from '../config/Config';
+import SoundQueue from '../queue/SoundQueue';
 
 import CommandCollection from '../bot/CommandCollection';
 import MessageHandler from '../bot/MessageHandler';
 import SoundBot from '../bot/SoundBot';
 import {
-  AvatarCommand,
+  //AvatarCommand,
   ConfigCommand,
   IgnoreCommand,
   LanguageCommand,
@@ -88,7 +88,7 @@ const commands = [
   new MostPlayedCommand(),
 
   // CONFIGURATION RELATED COMMANDS
-  new AvatarCommand(config),
+  //new AvatarCommand(config),
   new ConfigCommand(config),
   new LanguageCommand(config),
   new IgnoreCommand(),

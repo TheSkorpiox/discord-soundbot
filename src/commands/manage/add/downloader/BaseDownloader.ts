@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
 
-import { FormatError, ValidationError } from '~/util/Errors';
-import localize from '~/util/i18n/localize';
+import { FormatError, ValidationError } from '../../../../util/Errors';
+import localize from '../../../../util/i18n/localize';
 
 import BaseValidator from '../validator/BaseValidator';
 

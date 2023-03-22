@@ -2,7 +2,7 @@
 
 import URL from 'url';
 
-import { InvalidUrlError } from '~/util/Errors';
+import { InvalidUrlError } from '../../../../util/Errors';
 
 import BaseValidator from './BaseValidator';
 

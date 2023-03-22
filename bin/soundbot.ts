@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import Container from '~/util/Container';
-import localize from '~/util/i18n/localize';
+import Container from '../src/util/Container';
+import localize from '../src/util/i18n/localize';
 
 const { config, soundBot: bot } = Container;
 

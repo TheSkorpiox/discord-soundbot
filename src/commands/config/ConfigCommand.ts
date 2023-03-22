@@ -1,6 +1,6 @@
 import { ClientUser, Message } from 'discord.js';
 
-import localize from '~/util/i18n/localize';
+import localize from '../../util/i18n/localize';
 
 import BaseConfigCommand from '../base/ConfigCommand';
 import UserCommand from '../base/UserCommand';

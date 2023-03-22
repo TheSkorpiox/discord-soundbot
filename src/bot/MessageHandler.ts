@@ -2,10 +2,10 @@ import '../discord/Message';
 
 import { Message } from 'discord.js';
 
-import userHasElevatedRole from '~/commands/util/userHasElevatedRole';
-import { config } from '~/util/Container';
-import * as ignoreList from '~/util/db/IgnoreList';
-import localize from '~/util/i18n/localize';
+import userHasElevatedRole from '../commands/util/userHasElevatedRole';
+import { config } from '../util/Container';
+import * as ignoreList from '../util/db/IgnoreList';
+import localize from '../util/i18n/localize';
 
 import CommandCollection from './CommandCollection';
 

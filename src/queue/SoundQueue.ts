@@ -1,9 +1,11 @@
-import { Message, StreamDispatcher, VoiceConnection } from 'discord.js';
+import { Message } from 'discord.js';
+import { joinVoiceChannel, VoiceConnection, createAudioPlayer, AudioPlayer, createAudioResource, AudioPlayerStatus } from '@discordjs/voice';
+import { Collection } from 'discord.js';
 
-import Config from '~/config/Config';
-import * as sounds from '~/util/db/Sounds';
-import localize from '~/util/i18n/localize';
-import { getPathForSound } from '~/util/SoundUtil';
+import Config from '../config/Config';
+import * as sounds from '../util/db/Sounds';
+import localize from '../util/i18n/localize';
+import { getPathForSound } from '../util/SoundUtil';
 
 import ChannelTimeout from './ChannelTimeout';
 import QueueItem from './QueueItem';
@@ -13,10 +15,11 @@ export default class SoundQueue {
 
   private queue: QueueItem[] = [];
   private currentSound: Nullable<QueueItem>;
-  private dispatcher: Nullable<StreamDispatcher>;
+  private player: AudioPlayer;
 
   constructor(config: Config) {
     this.config = config;
+    this.player = createAudioPlayer();
   }
 
   public add(item: QueueItem) {
@@ -31,9 +34,9 @@ export default class SoundQueue {
   }
 
   public next() {
-    if (!this.dispatcher) return;
+    if (!this.player) return;
 
-    this.dispatcher.emit('finish');
+    this.player.stop();//.emit('finish');
   }
 
   public clear() {
@@ -71,30 +74,27 @@ export default class SoundQueue {
     const sound = getPathForSound(this.currentSound.name);
 
     try {
-      const connection = await this.currentSound.channel.join();
-      this.deafen(connection);
+      const connection = joinVoiceChannel({
+        channelId: this.currentSound.channel.id,
+        guildId: this.currentSound.channel.guild.id,
+        adapterCreator: this.currentSound.channel.guild.voiceAdapterCreator,
+        selfDeaf: true
+      });
+      connection.subscribe(this.player);
 
-      await this.playSound(connection, sound);
+      await this.playSound(sound);
       this.handleFinishedPlayingSound(connection);
-    } catch (error) {
+    } catch (error: any) {
       this.handleError(error);
     }
   }
 
-  // NOTE: Can only deafen when in a channel, therefore need connection
-  private deafen(connection: VoiceConnection) {
-    if (!connection.voice) return;
-    if (connection.voice.selfDeaf === this.config.deafen) return;
-
-    connection.voice.setDeaf(this.config.deafen);
-  }
-
-  private playSound(connection: VoiceConnection, name: string): Promise<void> {
+  private playSound(name: string): Promise<void> {
     return new Promise(resolve => {
-      this.dispatcher = connection
-        .play(name, { volume: this.config.volume })
-        .on('finish', resolve)
-        .on('close', resolve);
+      this.player.play(createAudioResource(name));
+      // .play(name, { volume: this.config.volume })
+      // this.player.on(AudioPlayerStatus.Idle, resolve)
+      // .on('close', resolve);
     });
   }
 
@@ -109,7 +109,6 @@ export default class SoundQueue {
     }
 
     this.currentSound = null;
-    this.dispatcher = null;
 
     if (!this.isEmpty()) {
       this.playNext();
@@ -133,7 +132,6 @@ export default class SoundQueue {
     console.error('Error occured!', '\n', error);
 
     this.currentSound = null;
-    this.dispatcher = null;
   }
 
   private deleteCurrentMessage() {
@@ -152,7 +150,7 @@ export default class SoundQueue {
   private wasMessageAlreadyDeleted(message: Message) {
     if (!message) return false;
 
-    return message.channel.messages.cache.find(msg => msg.id === message.id) === null;
+    return message.channel.messages.cache.get(message.id) === undefined;
   }
 
   private isLastSoundFromCurrentMessage(message: Message) {

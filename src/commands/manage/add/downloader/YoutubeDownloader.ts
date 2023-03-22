@@ -4,8 +4,8 @@ import fs from 'fs';
 import util from 'util';
 import ytdl from 'ytdl-core';
 
-import getSecondsFromTime from '~/util/getSecondsFromTime';
-import localize from '~/util/i18n/localize';
+import getSecondsFromTime from '../../../../util/getSecondsFromTime';
+import localize from '../../../../util/i18n/localize';
 
 import DownloadOptions, { ConvertOptions } from '../CommandOptions';
 import YoutubeValidator from '../validator/YoutubeValidator';
@@ -30,7 +30,7 @@ export default class YoutubeDownloader extends BaseDownloader {
       this.validator.validate(soundName, url);
       await this.addSound({ end, soundName, start, url });
       message.channel.send(localize.t('commands.add.success', { name: soundName }));
-    } catch (error) {
+    } catch (error: any) {
       this.handleError(message, error);
     }
   }
